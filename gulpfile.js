@@ -4,6 +4,8 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var ngAnnotate = require('gulp-ng-annotate');
+var browserSync = require("browser-sync");
+var reload      = browserSync.reload;
 var sass = require('gulp-sass');
 var Q = require('q');
 var client_js_src = "src/client/js/";
@@ -79,16 +81,52 @@ gulp.task('js', function () {
       .pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('build/js/app/'))
+     .pipe(reload({stream: true}));
 
   };
 jsFunc();
   });
 
+// ----- Browswer Sync ------
+// create a task that ensures the `js` task is complete before
+// reloading browsers
+
+gulp.task('watch', browserSync.reload);
+
+// use default task to launch BrowserSync and watch JS files
+gulp.task('serve',  function () {
+
+    // Serve files from the root of this project
+        browserSync({
+        files: "dist/client/**/*.*",
+        https: "true",
+         proxy: {
+           target: "https://angular-gulp-boilerplate-willbittner.c9.io:5000",
+           https: "true"
+         },
+        //port: "4000",
+        // server: {
+        //     baseDir: "dist/client/",// Change this to your web root dir
+        //     directory: "true"
+        // },
+        host: "angular-gulp-boilerplate-willbittner.c9.io"
+    });
+
+
+    // add browserSync.reload to the tasks array to make
+    // all browsers reload after tasks are complete.
+    gulp.watch('src/client/less/*.less').on('change', reload);
+  gulp.watch('src/client/js/*.js').on('change', reload);
+  gulp.watch('src/client/lib/*.js').on('change', reload);
+  gulp.watch('src/client/css/*.css').on('change', reload);
+  gulp.watch('src/client/sass/*.scss').on('change', reload);
+  gulp.watch('src/client/html/*.html').on('change', reload);
+});
 
 // ------- HTML -----------------
 gulp.task('html', function() {
   gulp.src(['src/client/html/**/*.html','src/client/html/*.html'])
-    .pipe(gulp.dest('build/html/'));
+    .pipe(gulp.dest('build/html/')).pipe(reload({stream: true}));
 });
 // --- Auto Install Bower Packages ----
 var jsFilter = gulpFilter('**/*.js');
@@ -112,7 +150,7 @@ gulp.task('dist-fonts',function() {
 gulp.task('dist-css',function() {
      gulp.src(['build/css/**/*.css','build/css/*.css'] )
     .pipe(concat('style.css'))
-    .pipe(gulp.dest('dist/client/css/'))
+    .pipe(gulp.dest('dist/client/css/')) .pipe(reload({stream: true}));
 });
 gulp.task('dist-js-lib', function () {
   gulp.src(['build/js/lib/*.js'])
@@ -143,21 +181,10 @@ gulp.task('dist-html',function() {
 var client_build_dist = ['dist-css','dist-js','dist-html'];
  var client_build = ['dist-html'];
 // -------------- WATCH -------------
-gulp.task('watch',client_build, function() {
 
-
-  gulp.watch('src/client/less/**/*.less', client_build);
-  gulp.watch('src/client/js/**/*.js', client_build);
-  gulp.watch('src/client/lib/**/*.js',client_build);
-  gulp.watch('src/client/css/**/*.css',client_build);
-  gulp.watch('src/client/sass/**/*.scss',client_build);
-  gulp.watch('src/client/html/**/*.html',client_build);
-  
-  
-});
 gulp.task('build',function() {
     runSequence(
     
               'bower-files','sass','less','css','html','js-lib','js','dist-js','dist-css','dist-html');
 });
-gulp.task('default',['build']);
+gulp.task('default',function () {});
