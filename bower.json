@@ -1,0 +1,31 @@
+{
+  "name": "angular-gulp-boilerplate",
+  "version": "0.0.0",
+  "homepage": "https://github.com/willbittner/gulp-buildster",
+  "authors": [
+    "William Bittner <noqlmobile@gmail.com>"
+  ],
+  "description": "I am sick of making an adhoc gulp build system everytime and I don't like anything out there",
+  "main": "gulpfile.js",
+  "keywords": [
+    "gulp",
+    "bower",
+    "compononents",
+    "angularjs",
+    "build"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap-simple-chat": "~0.0.2"
+  },
+  "devDependencies": {
+    "angular-bootstrap-simple-chat": "~0.0.2"
+  }
+}

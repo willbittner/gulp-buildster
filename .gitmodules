@@ -1,0 +1,3 @@
+[submodule "src/client/lib/angular-bootstrap-simple-chat"]
+	path = src/client/lib/angular-bootstrap-simple-chat
+	url = git@github.com:irontec/angular-bootstrap-simple-chat.git
